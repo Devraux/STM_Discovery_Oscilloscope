@@ -23,9 +23,9 @@
 #include "core_cm7.h"
 #include "lvgl.h"
 #include "ui.h"
-#include "../STM32F746_Hardware_Lib/stm32746g_discovery_sdram.h"
-#include "../Core/Inc/adc.h"
-#include "../Inc/ltdc.h"
+#include "stm32746g_discovery_sdram.h"
+#include "adc.h"
+#include "ltdc.h"
 #include <string.h>
 #include <stdbool.h>
 #include "arm_math.h"

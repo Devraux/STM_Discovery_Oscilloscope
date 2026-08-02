@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include "adc.h"
 #include "main.h"
 #include "stm32f7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
@@ -62,7 +63,7 @@ extern DMA2D_HandleTypeDef hdma2d;
 extern SDRAM_HandleTypeDef hsdram1;
 extern LTDC_HandleTypeDef hltdc;
 /* USER CODE BEGIN EV */
-ADC_activeBuffer ADC_activeBuffer_t;
+adc_active_buffer_t adc_active_buffer;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -253,9 +254,9 @@ void DMA2_Stream0_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
 	if((hadc3.DMA_Handle->Instance->CR & DMA_SxCR_CT) == 0)
-		ADC_activeBuffer_t = current_activeBuffer1;
+		adc_active_buffer = active_buffer_1;
 	else
-		ADC_activeBuffer_t = current_activeBuffer2;
+		adc_active_buffer = active_buffer_2;
 
   /* USER CODE END DMA2_Stream0_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc3);
@@ -293,8 +294,8 @@ void DMA2D_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-enum ADC_activeBuffer get_ADCActiveBuffer(void)
+enum adc_active_buffer_t get_adc_active_buffer(void)
 {
-	return ADC_activeBuffer_t;
+	return adc_active_buffer;
 }
 /* USER CODE END 1 */

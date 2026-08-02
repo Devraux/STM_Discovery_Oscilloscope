@@ -20,13 +20,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "adc.h"
 /* USER CODE BEGIN 0 */
-static uint32_t *ADC_buffer1 = NULL;
-static uint32_t *ADC_buffer2 = NULL;
-//static float *ADC_normalizedBuffer1 = NULL;
-//static float *ADC_normalizedBuffer2 = NULL;
+static uint32_t *adc_buffer_1 = NULL;
+static uint32_t *adc_buffer_2 = NULL;
 
 /* USER CODE END 0 */
-
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc3;
 DMA_HandleTypeDef hdma_adc3;
@@ -124,26 +121,20 @@ void MX_ADC3_Init(void)
   /* USER CODE BEGIN ADC3_Init 2 */
 
   // Data buffer Initialization
-  //ADC_valueArr = (uint32_t*)malloc(ADC_byteDataBufferSize);//buffer 5 times bigger than available screen size(272px x 480 px) -> 480px*5=2400
-  ADC_buffer1  = (uint32_t*)malloc(ADC_byteDataBufferSize);
-  ADC_buffer2  = (uint32_t*)malloc(ADC_byteDataBufferSize);
-//  ADC_normalizedBuffer1 = (float*)malloc(ADC_byteDataBufferSize);
-//  ADC_normalizedBuffer2 = (float*)malloc(ADC_byteDataBufferSize);
-  //data_bufferInit(&dataBuffer_t, ADC_currentValueArr, ADC_dataBufferSize);
+  adc_buffer_1  = (uint32_t*)malloc(ADC_BYTE_DATA_BUFFER_SIZE);
+  adc_buffer_2  = (uint32_t*)malloc(ADC_BYTE_DATA_BUFFER_SIZE);
 
   // ADC DMA START MEASUREMENTS
-  HAL_ADC_Start_DMA(&hadc3, ADC_buffer1, ADC_dataBufferSize);
-
+  HAL_ADC_Start_DMA(&hadc3, adc_buffer_1, ADC_DATA_BUFFER_SIZE);
+  
   __HAL_DMA_DISABLE(hadc3.DMA_Handle);
   hadc3.DMA_Handle->Instance->CR 	|= DMA_SxCR_DBM;
-  hadc3.DMA_Handle->Instance->M0AR 	 = (uint32_t)ADC_buffer1;
-  hadc3.DMA_Handle->Instance->M1AR 	 = (uint32_t)ADC_buffer2;
+  hadc3.DMA_Handle->Instance->M0AR 	 = (uint32_t)adc_buffer_1;
+  hadc3.DMA_Handle->Instance->M1AR 	 = (uint32_t)adc_buffer_2;
   __HAL_DMA_ENABLE(hadc3.DMA_Handle);
-
   __HAL_DMA_ENABLE_IT(&hdma_adc3, DMA_IT_TC);
 
   /* USER CODE END ADC3_Init 2 */
-
 }
 
 void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
@@ -266,64 +257,40 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 }
 
 /* USER CODE BEGIN 1 */
-uint32_t *ADC_getDataPtrBuffer1(void)
+uint32_t *adc_get_data_buffer_1(void)
 {
-	return ADC_buffer1;
+	return adc_buffer_1;
 }
 
-
-uint32_t *ADC_getDataPtrBuffer2(void)
+uint32_t *adc_get_data_buffer_2(void)
 {
-	return ADC_buffer2;
+	return adc_buffer_2;
 }
 
-uint32_t *ADC_getProperBuffer(void)
+uint32_t *adc_get_current_buffer(void)
 {
-	if(get_ADCActiveBuffer() == current_activeBuffer1)
-		return ADC_buffer1;
+	if(get_adc_active_buffer() == active_buffer_1)
+		return adc_buffer_1;
 
 	else
-		return ADC_buffer2;
+		return adc_buffer_2;
 }
 
-int32_t array_getMin(uint32_t *ADC_buffer)
+int32_t array_get_min(uint32_t *adc_buffer)
 {
 	q31_t min_value = 0;
 	uint32_t min_valueIndex = 0;
-	arm_min_q31((q31_t*)ADC_buffer, ADC_dataBufferSize, &min_value, &min_valueIndex);
+	arm_min_q31((q31_t*)adc_buffer, ADC_DATA_BUFFER_SIZE, &min_value, &min_valueIndex);
 
 	return min_value;
 }
-int32_t array_getMax(uint32_t *ADC_buffer)
+int32_t array_get_max(uint32_t *adc_buffer)
 {
 	q31_t max_value = 0;
 	uint32_t max_valueIndex = 0;
-	arm_max_q31((q31_t*)ADC_buffer, ADC_dataBufferSize, &max_value, &max_valueIndex);
+	arm_max_q31((q31_t*)adc_buffer, ADC_DATA_BUFFER_SIZE, &max_value, &max_valueIndex);
 
 	return max_value;
 }
-
-//bool ADC_sampleTransform(float *dst_buffer, uint32_t *src_buffer, uint32_t data_length)
-//{
-//	const float ADC_resolution = 0.00080566406f;
-//
-//	arm_scale_f32((float*)src_buffer, ADC_resolution, dst_buffer, data_length);
-//
-//	return true;
-//}
-
-//float *ADC_getProperBufferNormalized(void)
-//{
-//	if(get_ADCActiveBuffer() == current_activeBuffer1)
-//	{
-//		ADC_sampleTransform(ADC_normalizedBuffer1, ADC_buffer1, ADC_dataBufferSize);
-//		return ADC_normalizedBuffer1;
-//	}
-//	else
-//	{
-//		ADC_sampleTransform(ADC_normalizedBuffer2, ADC_buffer2, ADC_dataBufferSize);
-//		return ADC_normalizedBuffer2;
-//	}
-//}
 
 /* USER CODE END 1 */

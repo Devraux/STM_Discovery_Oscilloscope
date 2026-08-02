@@ -348,3 +348,4 @@ void display_Simple_Update(uint32_t buffer)
 
 
 /* USER CODE END 1 */
+

@@ -29,8 +29,6 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
-#include "../../Data_Buffer/Data_Buffer.h"
 #include "stm32f7xx_it.h"
 #include "stdbool.h"
 #include "arm_math.h"
@@ -39,18 +37,17 @@ extern "C" {
 /* USER CODE END Includes */
 
 extern ADC_HandleTypeDef hadc1;
-
 extern ADC_HandleTypeDef hadc3;
 
 /* USER CODE BEGIN Private defines */
-#define ADC_dataBufferSize 		400
-#define ADC_byteDataBufferSize 	ADC_dataBufferSize * sizeof(uint32_t)
-#define ADC_resolutionConst 	0.00080566406 //this value is shorter due to float casting
+#define ADC_DATA_BUFFER_SIZE 		400
+#define ADC_BYTE_DATA_BUFFER_SIZE 	ADC_DATA_BUFFER_SIZE * sizeof(uint32_t) // ADC_DATA_BUFFER_SIZE expressed in bytes
+#define ADC_RESOLUTION 	0.00080566406 //this value is shorter due to float casting
 
-typedef enum ADC_activeBuffer{
-	current_activeBuffer1 = 1,
-	current_activeBuffer2 = 2,
-}ADC_activeBuffer;
+typedef enum adc_active_buffer_t{
+	active_buffer_1 = 1,
+	active_buffer_2 = 2,
+}adc_active_buffer_t;
 
 /* USER CODE END Private defines */
 
@@ -59,19 +56,16 @@ void MX_ADC3_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 // Double buffering DMA & ADC
-uint32_t *ADC_getDataPtrBuffer1(void);
-uint32_t *ADC_getDataPtrBuffer2(void);
-uint32_t *ADC_getProperBuffer(void);
+uint32_t *adc_get_data_buffer_1(void);
+uint32_t *adc_get_data_buffer_2(void);
+uint32_t *adc_get_current_buffer(void);
 
-int32_t array_getMin(uint32_t *ADC_buffer);
-int32_t array_getMax(uint32_t *ADC_buffer);
 
-/// NOT USED - FLOATING POINT CONVERSIONS - NOT USED///
-//float *ADC_getProperBufferNormalized(void);
-//bool ADC_sampleTransform(float *dst_buffer, uint32_t *src_buffer, uint32_t data_length);
+int32_t array_get_min(uint32_t *adc_buffer);
+int32_t array_get_max(uint32_t *adc_buffer);
 
 /* USER CODE END Prototypes */
-
+ 
 #ifdef __cplusplus
 }
 #endif

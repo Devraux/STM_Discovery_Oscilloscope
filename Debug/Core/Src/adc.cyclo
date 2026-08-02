@@ -1,9 +1,0 @@
-../Core/Src/adc.c:35:6:MX_ADC1_Init	3
-../Core/Src/adc.c:83:6:MX_ADC3_Init	3
-../Core/Src/adc.c:149:6:HAL_ADC_MspInit	4
-../Core/Src/adc.c:213:6:HAL_ADC_MspDeInit	3
-../Core/Src/adc.c:269:11:ADC_getDataPtrBuffer1	1
-../Core/Src/adc.c:275:11:ADC_getDataPtrBuffer2	1
-../Core/Src/adc.c:280:11:ADC_getProperBuffer	2
-../Core/Src/adc.c:289:9:array_getMin	1
-../Core/Src/adc.c:297:9:array_getMax	1

@@ -22,7 +22,7 @@
 #define __STM32F7xx_IT_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Private includes ----------------------------------------------------------*/
@@ -63,7 +63,7 @@ void LTDC_IRQHandler(void);
 void DMA2D_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
-enum ADC_activeBuffer get_ADCActiveBuffer(void);
+enum adc_active_buffer_t get_adc_active_buffer(void);
 
 /* USER CODE END EFP */
 

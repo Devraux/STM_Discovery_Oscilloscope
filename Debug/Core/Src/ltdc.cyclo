@@ -1,6 +1,0 @@
-../Core/Src/ltdc.c:31:6:MX_LTDC_Init	3
-../Core/Src/ltdc.c:128:6:HAL_LTDC_MspInit	3
-../Core/Src/ltdc.c:242:6:HAL_LTDC_MspDeInit	2
-../Core/Src/ltdc.c:307:6:display_Activate	1
-../Core/Src/ltdc.c:319:6:display_BL_Set	1
-../Core/Src/ltdc.c:331:6:display_Simple_Update	2

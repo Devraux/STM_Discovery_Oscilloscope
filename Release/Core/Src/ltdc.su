@@ -1,6 +1,0 @@
-../Core/Src/ltdc.c:33:6:MX_LTDC_Init	72	static
-../Core/Src/ltdc.c:210:6:HAL_LTDC_MspDeInit	8	static
-../Core/Src/ltdc.c:275:6:display_Activate	40	static
-../Core/Src/ltdc.c:287:6:display_BL_Set	40	static
-../Core/Src/ltdc.c:96:6:HAL_LTDC_MspInit	192	static
-../Core/Src/ltdc.c:299:6:display_Simple_Update	64	static

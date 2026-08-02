@@ -210,7 +210,7 @@ void display_chartWindow(void)
 	ADC_dataSeries = lv_chart_add_series(chart, lv_color_hex(0xff0000), LV_CHART_AXIS_PRIMARY_Y);
 	lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -4200, 4200);
     lv_chart_set_point_count(chart, 400);
-    lv_chart_set_ext_y_array(chart, ADC_dataSeries, (int32_t*)ADC_getProperBuffer());
+    lv_chart_set_ext_y_array(chart, ADC_dataSeries, (int32_t*)adc_get_current_buffer());
 
     static lv_style_t style_line;
     lv_style_init(&style_line);
@@ -412,7 +412,7 @@ void update_chart(lv_timer_t *timer)
 	if(!lv_obj_has_flag(math_windowBox, LV_OBJ_FLAG_HIDDEN))
 		display_updateMathWindowBox();
 
-	uint32_t *ADC_dataPtr = ADC_getProperBuffer();
+	uint32_t *ADC_dataPtr = adc_get_current_buffer();
 	lv_chart_set_ext_y_array(chart, ADC_dataSeries, (int32_t*)ADC_dataPtr);
     lv_chart_refresh(chart);
 }
@@ -447,10 +447,10 @@ void display_createMathWindowBox(void)
 
 void display_updateMathWindowBox(void)
 {
-	uint32_t *ADC_dataPtr = ADC_getProperBuffer();
+	uint32_t *ADC_dataPtr = adc_get_current_buffer();
 
-	lv_label_set_text_fmt(label_maxVal, "Max[V]: %.3f", (float)array_getMax(ADC_dataPtr) * (float)ADC_resolutionConst);
-    lv_label_set_text_fmt(label_minVal, "Min[V]: %.3f", (float)array_getMin(ADC_dataPtr) * (float)ADC_resolutionConst);
+	lv_label_set_text_fmt(label_maxVal, "Max[V]: %.3f", (float)array_get_max(ADC_dataPtr) * (float)ADC_RESOLUTION);
+    lv_label_set_text_fmt(label_minVal, "Min[V]: %.3f", (float)array_get_min(ADC_dataPtr) * (float)ADC_RESOLUTION);
 }
 
 void display_toggleWindowBox(void *obj)
