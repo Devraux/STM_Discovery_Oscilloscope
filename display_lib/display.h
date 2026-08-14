@@ -42,13 +42,13 @@
 #define BUTTON_PRESSED			1
 #define BUTTON_RELEASED			0
 
-typedef struct button_state{
+typedef struct button_state_t{
 	bool BUTTON_STOP;
 	bool BUTTON_CURSOR;
 	bool BUTTON_DC_AC_COUPLING;
 	bool BUTTONMATH;
 	bool BUTTON_OPTIONS;
-}button_state;
+}button_state_t;
 
 
 /// display initialization
@@ -62,7 +62,7 @@ void my_flush_cb(lv_display_t *display, const lv_area_t *area, uint8_t *px_map);
 ///  Displayed features:
 /// 					- Chart
 ///			  			- Grid
-void display_chartWindow(void);
+void display_chart_window(void);
 
 
 ///  Widget description: right side buttons which allows to choose oscilloscope options
@@ -73,7 +73,7 @@ void display_chartWindow(void);
 /// 					- "DC/AC Coupling"          button
 /// 					- "Math functions"          button
 ///						- "More options"            button
-void display_buttonsWindow(void);
+void display_buttons_window(void);
 
 
 ///  Widget description: bottom bar measure
@@ -83,7 +83,7 @@ void display_buttonsWindow(void);
 ///						- "TIME/DIV"                  label
 /// 					- "X_Coordinate Cursor_1 | 2" label
 /// 					- "Y_Coordinate Cursor_1 | 2" label
-void display_bottomBarWindow(void);
+void display_bottom_bar_window(void);
 
 
 ///  Widget description: top bar additional informations
@@ -109,11 +109,11 @@ void update_chart(lv_timer_t *timer);
 /// 					- display scale
 ///						- display chart grid
 ///						-
-void display_setAxis(void);
+void display_set_axis(void);
 
 
-void display_createMathWindowBox(void);
-void display_updateMathWindowBox(void);
-void display_toggleWindowBox(void *obj);
+void display_create_math_window_box(void);
+void display_update_math_window_box(void);
+void display_toggle_window_box(void *obj);
 
 #endif

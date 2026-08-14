@@ -251,7 +251,6 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
   /* USER CODE END ADC3:ADC_IRQn disable */
 
   /* USER CODE BEGIN ADC3_MspDeInit 1 */
-
   /* USER CODE END ADC3_MspDeInit 1 */
   }
 }

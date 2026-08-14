@@ -3,15 +3,15 @@
 
 /// Private variables ///
 uint8_t buf1[RESOLUTION_HORIZONTAL * RESOLUTION_VERTICAL / 2 * BYTES_PER_PIXEL];
-uint16_t *framebuffer;
+uint16_t *frame_buffer;
 
-static button_state button_state_t = {BUTTON_RELEASED};
+static button_state_t button_state = {BUTTON_RELEASED};
 
 ////////////////////// Right side buttons local objects/////////////////
-static lv_obj_t *label_stopRun;
-static lv_obj_t *label_Cursor;
-static lv_obj_t *label_DC_ACCoupling;
-static lv_obj_t *label_mathFun;
+static lv_obj_t *label_stop_run;
+static lv_obj_t *label_cursor;
+static lv_obj_t *label_dc_ac_coupling;
+static lv_obj_t *label_math_fun;
 static lv_obj_t *label_options;
 ////////////////////////////////////////////////////////////////////////
 
@@ -23,14 +23,14 @@ static lv_obj_t *time;
 
 ////////////////////// Data display local objects //////////////////////
 static lv_obj_t *chart;
-static lv_chart_series_t *ADC_dataSeries;
+static lv_chart_series_t *adc_data_series;
 
 ////////////////////////////////////////////////////////////////////////
 
 ////////////////////// Measure window box local objects/////////////////
-static lv_obj_t *math_windowBox;
-static lv_obj_t *label_minVal;
-static lv_obj_t *label_maxVal;
+static lv_obj_t *math_window_box;
+static lv_obj_t *label_min_val;
+static lv_obj_t *label_max_val;
 ////////////////////////////////////////////////////////////////////////
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -45,7 +45,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if (GPIO_Pin == USER_BUTTON_Pin) //temporary stop button
 	{
 		//display_toggleWindowBox(math_box);
-		lv_async_call(display_toggleWindowBox, math_windowBox);
+		lv_async_call(display_toggle_window_box, math_window_box);
 	}
 
 }
@@ -77,69 +77,67 @@ void display_init(void)
 
 
 	//Display tool bars and chart template initialization
-	display_chartWindow();
-	display_bottomBarWindow();
-	display_buttonsWindow();
-	display_createMathWindowBox();
-
-
+	display_chart_window();
+	display_bottom_bar_window();
+	display_buttons_window();
+	display_create_math_window_box();
 }
 
-void display_buttonsWindow(void)
+void display_buttons_window(void)
 {
 
 	//////////////////////////// Stop/Run /////////////////////////////////////
-	lv_obj_t *btn_stopRun = lv_button_create(lv_screen_active());
-	lv_obj_set_size(btn_stopRun, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
-	lv_obj_align(btn_stopRun, LV_ALIGN_TOP_RIGHT, 0, 0);
-	lv_obj_set_style_bg_color(btn_stopRun, lv_color_hex(0x1b39c6), LV_PART_MAIN);
-	lv_obj_set_style_radius(btn_stopRun, 2, LV_PART_MAIN);
+	lv_obj_t *btn_stop_run = lv_button_create(lv_screen_active());
+	lv_obj_set_size(btn_stop_run, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
+	lv_obj_align(btn_stop_run, LV_ALIGN_TOP_RIGHT, 0, 0);
+	lv_obj_set_style_bg_color(btn_stop_run, lv_color_hex(0x1b39c6), LV_PART_MAIN);
+	lv_obj_set_style_radius(btn_stop_run, 2, LV_PART_MAIN);
 
 
-	label_stopRun = lv_label_create(btn_stopRun);
-	lv_label_set_text(label_stopRun, "Stop");
-	lv_obj_center(label_stopRun);
-	lv_obj_set_style_text_color(label_stopRun, lv_color_hex(0xd6e32b), LV_PART_MAIN);
+	label_stop_run = lv_label_create(btn_stop_run);
+	lv_label_set_text(label_stop_run, "Stop");
+	lv_obj_center(label_stop_run);
+	lv_obj_set_style_text_color(label_stop_run, lv_color_hex(0xd6e32b), LV_PART_MAIN);
 	///////////////////////////////////////////////////////////////////////////
 
 
 	//////////////////////////// Place X/Y Cursor 1 | 2 ///////////////////////
-	lv_obj_t *btn_Cursor = lv_button_create(lv_screen_active());
-	lv_obj_set_size(btn_Cursor, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
-	lv_obj_align(btn_Cursor, LV_ALIGN_TOP_RIGHT,0 ,50);
-	lv_obj_set_style_bg_color(btn_Cursor, lv_color_hex(0x1b39c6), LV_PART_MAIN);
-	lv_obj_set_style_radius(btn_Cursor, 2, LV_PART_MAIN);
+	lv_obj_t *btn_cursor = lv_button_create(lv_screen_active());
+	lv_obj_set_size(btn_cursor, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
+	lv_obj_align(btn_cursor, LV_ALIGN_TOP_RIGHT,0 ,50);
+	lv_obj_set_style_bg_color(btn_cursor, lv_color_hex(0x1b39c6), LV_PART_MAIN);
+	lv_obj_set_style_radius(btn_cursor, 2, LV_PART_MAIN);
 
-	label_Cursor = lv_label_create(btn_Cursor);
-	lv_label_set_text(label_Cursor, "Cursor");
-	lv_obj_center(label_Cursor);
-	lv_obj_set_style_text_color(label_Cursor, lv_color_hex(0xd6e32b), LV_PART_MAIN);
+	label_cursor = lv_label_create(btn_cursor);
+	lv_label_set_text(label_cursor, "Cursor");
+	lv_obj_center(label_cursor);
+	lv_obj_set_style_text_color(label_cursor, lv_color_hex(0xd6e32b), LV_PART_MAIN);
 	///////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////// DC/AC Coupling ///////////////////////////////
-	lv_obj_t *btn_DC_ACCoupling = lv_button_create(lv_screen_active());
-	lv_obj_set_size(btn_DC_ACCoupling, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
-	lv_obj_align(btn_DC_ACCoupling, LV_ALIGN_TOP_RIGHT, 0, 100);
-	lv_obj_set_style_bg_color(btn_DC_ACCoupling, lv_color_hex(0x1b39c6), LV_PART_MAIN);
-	lv_obj_set_style_radius(btn_DC_ACCoupling, 2, LV_PART_MAIN);
+	lv_obj_t *btn_dc_ac_coupling = lv_button_create(lv_screen_active());
+	lv_obj_set_size(btn_dc_ac_coupling, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
+	lv_obj_align(btn_dc_ac_coupling, LV_ALIGN_TOP_RIGHT, 0, 100);
+	lv_obj_set_style_bg_color(btn_dc_ac_coupling, lv_color_hex(0x1b39c6), LV_PART_MAIN);
+	lv_obj_set_style_radius(btn_dc_ac_coupling, 2, LV_PART_MAIN);
 
-	label_DC_ACCoupling = lv_label_create(btn_DC_ACCoupling);
-	lv_label_set_text(label_DC_ACCoupling, "DC/AC");
-	lv_obj_center(label_DC_ACCoupling);
-	lv_obj_set_style_text_color(label_DC_ACCoupling, lv_color_hex(0xd6e32b), LV_PART_MAIN);
+	label_dc_ac_coupling = lv_label_create(btn_dc_ac_coupling);
+	lv_label_set_text(label_dc_ac_coupling, "DC/AC");
+	lv_obj_center(label_dc_ac_coupling);
+	lv_obj_set_style_text_color(label_dc_ac_coupling, lv_color_hex(0xd6e32b), LV_PART_MAIN);
 	///////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////// Math functions ///////////////////////////////
-	lv_obj_t *btn_mathFun = lv_button_create(lv_screen_active());
-	lv_obj_set_size(btn_mathFun, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
-	lv_obj_align(btn_mathFun, LV_ALIGN_TOP_RIGHT, 0, 150);
-	lv_obj_set_style_bg_color(btn_mathFun, lv_color_hex(0x1b39c6), LV_PART_MAIN);
-	lv_obj_set_style_radius(btn_mathFun, 2, LV_PART_MAIN);
+	lv_obj_t *btn_math_fun = lv_button_create(lv_screen_active());
+	lv_obj_set_size(btn_math_fun, DISPLAY_BUTTONS_WIDTH, DISPLAY_BUTTONS_HEIGHT);
+	lv_obj_align(btn_math_fun, LV_ALIGN_TOP_RIGHT, 0, 150);
+	lv_obj_set_style_bg_color(btn_math_fun, lv_color_hex(0x1b39c6), LV_PART_MAIN);
+	lv_obj_set_style_radius(btn_math_fun, 2, LV_PART_MAIN);
 
-	label_mathFun = lv_label_create(btn_mathFun);
-	lv_label_set_text(label_mathFun, "Math");
-	lv_obj_center(label_mathFun);
-	lv_obj_set_style_text_color(label_mathFun, lv_color_hex(0xd6e32b), LV_PART_MAIN);
+	label_math_fun = lv_label_create(btn_math_fun);
+	lv_label_set_text(label_math_fun, "Math");
+	lv_obj_center(label_math_fun);
+	lv_obj_set_style_text_color(label_math_fun, lv_color_hex(0xd6e32b), LV_PART_MAIN);
 	///////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////// More options /////////////////////////////////
@@ -156,7 +154,7 @@ void display_buttonsWindow(void)
 	///////////////////////////////////////////////////////////////////////////
 }
 
-void display_bottomBarWindow(void)
+void display_bottom_bar_window(void)
 {
 	lv_obj_t *bottom_bar = lv_obj_create(lv_screen_active());
 	lv_obj_set_size(bottom_bar, 480, 24);
@@ -183,7 +181,7 @@ void display_bottomBarWindow(void)
 	lv_obj_set_style_text_color(time, lv_color_hex(0xd6e32b), LV_PART_MAIN);
 }
 
-void display_chartWindow(void)
+void display_chart_window(void)
 {
 ////////////////////// chart basic properties ////////////////////////////
 	chart = lv_chart_create(lv_screen_active());
@@ -202,15 +200,15 @@ void display_chartWindow(void)
 
 
 ////////////////////// chart OX & OY PLOT AXIS ////////////////////////
-	display_setAxis();
+	display_set_axis();
 ////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////// chart ADC Data plot ////////////////////////////
-	ADC_dataSeries = lv_chart_add_series(chart, lv_color_hex(0xff0000), LV_CHART_AXIS_PRIMARY_Y);
+	adc_data_series = lv_chart_add_series(chart, lv_color_hex(0xff0000), LV_CHART_AXIS_PRIMARY_Y);
 	lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, -4200, 4200);
     lv_chart_set_point_count(chart, 400);
-    lv_chart_set_ext_y_array(chart, ADC_dataSeries, (int32_t*)adc_get_current_buffer());
+    lv_chart_set_ext_y_array(chart, adc_data_series, (int32_t*)adc_get_current_buffer());
 
     static lv_style_t style_line;
     lv_style_init(&style_line);
@@ -225,7 +223,7 @@ void display_chartWindow(void)
 
 }
 
-void display_setAxis(void)
+void display_set_axis(void)
 {
 	////////////////////// chart OX & OY Axis /////////////////////
 	static lv_style_t style_axis;
@@ -403,57 +401,56 @@ void display_setAxis(void)
 void update_chart(lv_timer_t *timer)
 {
 	//@important -> DMA IRQ after copied one buffer is placed in stm32f746xx_it.c
-
-	if(button_state_t.BUTTON_STOP == BUTTON_PRESSED) // RUN/STOP button pressed
+	if(button_state.BUTTON_STOP == BUTTON_PRESSED) // RUN/STOP button pressed
 		return;
 
 	HAL_GPIO_TogglePin(USER_LED_GPIO_Port, USER_LED_Pin);
 
-	if(!lv_obj_has_flag(math_windowBox, LV_OBJ_FLAG_HIDDEN))
-		display_updateMathWindowBox();
+	if(!lv_obj_has_flag(math_window_box, LV_OBJ_FLAG_HIDDEN))
+		display_update_math_window_box();
 
-	uint32_t *ADC_dataPtr = adc_get_current_buffer();
-	lv_chart_set_ext_y_array(chart, ADC_dataSeries, (int32_t*)ADC_dataPtr);
+	uint32_t *adc_data_ptr = adc_get_current_buffer();
+	lv_chart_set_ext_y_array(chart, adc_data_series, (int32_t*)adc_data_ptr);
     lv_chart_refresh(chart);
 }
 
-void display_createMathWindowBox(void)
+void display_create_math_window_box(void)
 {
-	math_windowBox = lv_win_create(lv_screen_active());
-	lv_obj_set_size(math_windowBox, DISPLAY_CHART_WIDTH - 16, 40);
-	lv_obj_align(math_windowBox, LV_ALIGN_BOTTOM_MID, -38, -30);
-	lv_win_add_title(math_windowBox, "Math tool");
+	math_window_box = lv_win_create(lv_screen_active());
+	lv_obj_set_size(math_window_box, DISPLAY_CHART_WIDTH - 16, 40);
+	lv_obj_align(math_window_box, LV_ALIGN_BOTTOM_MID, -38, -30);
+	lv_win_add_title(math_window_box, "Math tool");
 
-	lv_obj_t *math_toolHeader = lv_win_get_header(math_windowBox);
-	lv_obj_set_style_text_color(math_toolHeader, lv_color_hex(0xd6e32b), LV_PART_MAIN);
-	lv_obj_set_style_bg_color(math_toolHeader, lv_color_hex(0x3e6ed6), LV_PART_MAIN);
-	lv_obj_set_style_height(math_toolHeader, 15, LV_PART_MAIN);
+	lv_obj_t *math_tool_header = lv_win_get_header(math_window_box);
+	lv_obj_set_style_text_color(math_tool_header, lv_color_hex(0xd6e32b), LV_PART_MAIN);
+	lv_obj_set_style_bg_color(math_tool_header, lv_color_hex(0x3e6ed6), LV_PART_MAIN);
+	lv_obj_set_style_height(math_tool_header, 15, LV_PART_MAIN);
 
-	lv_obj_t *math_toolContent = lv_win_get_content(math_windowBox);
-	lv_obj_set_style_text_color(math_toolContent, lv_color_hex(0xd6e32b), LV_PART_MAIN);
-	lv_obj_set_style_bg_color(math_toolContent, lv_color_hex(0x5c6e96), LV_PART_MAIN);
-	lv_obj_clear_flag(math_toolContent, LV_OBJ_FLAG_SCROLLABLE);
-	lv_obj_set_style_pad_top(math_toolContent, 15, LV_PART_MAIN);
-	lv_obj_set_style_pad_left(math_toolContent, 5, LV_PART_MAIN);
+	lv_obj_t *math_tool_content = lv_win_get_content(math_window_box);
+	lv_obj_set_style_text_color(math_tool_content, lv_color_hex(0xd6e32b), LV_PART_MAIN);
+	lv_obj_set_style_bg_color(math_tool_content, lv_color_hex(0x5c6e96), LV_PART_MAIN);
+	lv_obj_clear_flag(math_tool_content, LV_OBJ_FLAG_SCROLLABLE);
+	lv_obj_set_style_pad_top(math_tool_content, 15, LV_PART_MAIN);
+	lv_obj_set_style_pad_left(math_tool_content, 5, LV_PART_MAIN);
 
-	label_maxVal = lv_label_create(math_toolContent);
-	lv_obj_align(label_maxVal, LV_ALIGN_CENTER, -140, 0);
+	label_max_val = lv_label_create(math_tool_content);
+	lv_obj_align(label_max_val, LV_ALIGN_CENTER, -140, 0);
 
-	label_minVal = lv_label_create(math_toolContent);
-	lv_obj_align(label_minVal, LV_ALIGN_CENTER, -40, 0);
+	label_min_val = lv_label_create(math_tool_content);
+	lv_obj_align(label_min_val, LV_ALIGN_CENTER, -40, 0);
 
-	lv_obj_add_flag(math_windowBox, LV_OBJ_FLAG_HIDDEN);
+	lv_obj_add_flag(math_window_box, LV_OBJ_FLAG_HIDDEN);
 }
 
-void display_updateMathWindowBox(void)
+void display_update_math_window_box(void)
 {
-	uint32_t *ADC_dataPtr = adc_get_current_buffer();
+	uint32_t *adc_data_ptr = adc_get_current_buffer();
 
-	lv_label_set_text_fmt(label_maxVal, "Max[V]: %.3f", (float)array_get_max(ADC_dataPtr) * (float)ADC_RESOLUTION);
-    lv_label_set_text_fmt(label_minVal, "Min[V]: %.3f", (float)array_get_min(ADC_dataPtr) * (float)ADC_RESOLUTION);
+	lv_label_set_text_fmt(label_max_val, "Max[V]: %.3f", (float)array_get_max(adc_data_ptr) * (float)ADC_RESOLUTION);
+    lv_label_set_text_fmt(label_min_val, "Min[V]: %.3f", (float)array_get_min(adc_data_ptr) * (float)ADC_RESOLUTION);
 }
 
-void display_toggleWindowBox(void *obj)
+void display_toggle_window_box(void *obj)
 {
 	 if(obj == NULL)
 		 return;
